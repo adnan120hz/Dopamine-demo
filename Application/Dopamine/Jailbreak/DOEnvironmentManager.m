@@ -227,7 +227,7 @@ extern char **environ;
 - (NSString *)versionSupportString
 {
     // DEMO: single supported target.
-    return @"Supported iOS 26.6.1 RC! (userland)";
+    return @"Supported iOS 27.0.1 (A13/A15)! (userland)";
 }
 
 - (BOOL)isInstalledThroughTrollStore
@@ -741,13 +741,13 @@ static NSString *NeoRespringHTML(void)
 
 - (BOOL)isSupported
 {
-    // DEMO: the only accepted build is iOS 26.6.1 RC (23G82).
+    // DEMO: the only accepted build is iOS 27.0.1 (24A446).
     // Stock Dopamine's exploit matrix does not cover it, so the build number
     // is checked directly instead of consulting the exploit manager.
     char osVersion[32] = {0};
     size_t len = sizeof(osVersion);
     if (sysctlbyname("kern.osversion", osVersion, &len, NULL, 0) != 0) return NO;
-    return strcmp(osVersion, "23G82") == 0;
+    return strcmp(osVersion, "24A446") == 0;
 }
 
 - (BOOL)deviceSupportsFaceID

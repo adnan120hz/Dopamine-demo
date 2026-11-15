@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 3.x
+      - demo-27.0.1
     paths:
       - "Demo/**"
   workflow_dispatch:
