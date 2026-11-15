@@ -21,7 +21,6 @@
 
 @property DOJailbreakButton *jailbreakBtn;
 @property NSArray<NSLayoutConstraint *> *jailbreakButtonConstraints;
-@property DOActionMenuButton *updateButton;
 @property(nonatomic) BOOL hideStatusBar;
 @property(nonatomic) BOOL hideHomeIndicator;
 
@@ -140,10 +139,8 @@
         [actionView hide];
         [self.jailbreakBtn expandButton: self.jailbreakButtonConstraints];
 
-        self.updateButton.userInteractionEnabled = NO;
         [UIView animateWithDuration:0.75 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:2.0  options: UIViewAnimationOptionCurveEaseInOut animations:^{
             [headerView setTransform:CGAffineTransformMakeTranslation(0, -25)];
-            self.updateButton.alpha = 0;
         } completion:nil];
         
         [self startJailbreak];
@@ -161,20 +158,6 @@
         [self.jailbreakBtn.centerYAnchor constraintEqualToAnchor:buttonPlaceHolder.centerYAnchor]
     ])];
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        if ([[DOUIManager sharedInstance] environmentUpdateAvailable])
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setupUpdateAvailable:YES];
-            });
-        }
-        else if ([[DOUIManager sharedInstance] isUpdateAvailable])
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setupUpdateAvailable:NO];
-            });
-        }
-    });
 }
 
 - (NSString *)jailbreakButtonTitle
@@ -285,43 +268,6 @@
         });
         [self.jailbreakBtn unlockMutex];
     });
-}
-
--(void)setupUpdateAvailable:(BOOL)environmentUpdate
-{
-    if (self.jailbreakBtn.didExpand)
-        return;
-
-    NSString *title = environmentUpdate ? DOLocalizedString(@"Button_Update_Environment") : DOLocalizedString(@"Button_Update_Available");
-    
-    NSString *releaseFrom = [[DOUIManager sharedInstance] getLaunchedReleaseTag];
-    NSString *releaseTo = [[DOUIManager sharedInstance] getLatestReleaseTag];
-
-    if (environmentUpdate)
-    {
-        releaseFrom = [[DOEnvironmentManager sharedManager] jailbrokenVersion];
-        releaseTo = [[DOUIManager sharedInstance] getLaunchedReleaseTag];
-    }
-
-    self.updateButton = [DOActionMenuButton buttonWithAction:[UIAction actionWithTitle:title image:[UIImage systemImageNamed:@"arrow.down.circle" withConfiguration:[DOGlobalAppearance smallIconImageConfiguration]] identifier:@"update-available" handler:^(__kindof UIAction * _Nonnull action) {
-        [self.navigationController pushViewController:[[DOUpdateViewController alloc] initFromTag:releaseFrom toTag:releaseTo] animated:YES];
-    }] chevron:NO];
-
-    self.updateButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:self.updateButton];
-
-    [NSLayoutConstraint activateConstraints:@[
-        [self.updateButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-        [self.updateButton.heightAnchor constraintEqualToConstant:30],
-        [self.updateButton.bottomAnchor constraintEqualToAnchor:self.jailbreakBtn.topAnchor constant:[DOGlobalAppearance isHomeButtonDevice] ? -10 : -20]
-    ]];
-
-    [self.updateButton setTransform:CGAffineTransformMakeTranslation(0, 25)];
-    [self.updateButton setAlpha:0];
-    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:2.0  options: UIViewAnimationOptionCurveEaseInOut animations:^{
-        [self.updateButton setTransform:CGAffineTransformIdentity];
-        [self.updateButton setAlpha:1];
-    } completion:nil];
 }
 
 -(void)simulateJailbreak

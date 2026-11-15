@@ -34,7 +34,7 @@
 
     // Status
     self.statusLabel = [[UILabel alloc] init];
-    self.statusLabel.text = @"Supported iOS 27.0.1 (A13/A15)! (userland)";
+    self.statusLabel.text = @"Supported iOS 27.0.1 (A13/A15)!";
     self.statusLabel.font = [UIFont systemFontOfSize:15 weight:UIFontWeightMedium];
     self.statusLabel.textColor = [UIColor colorWithRed:0.19 green:0.82 blue:0.35 alpha:1.0];
     self.statusLabel.textAlignment = NSTextAlignmentCenter;
