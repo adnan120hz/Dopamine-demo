@@ -227,7 +227,7 @@ extern char **environ;
 - (NSString *)versionSupportString
 {
     // DEMO: single supported target.
-    return @"Supported iOS 27.0.1 (A13/A15)!";
+    return @"Supported iOS 27.0.1 (A13/A15) (userland)";
 }
 
 - (BOOL)isInstalledThroughTrollStore
